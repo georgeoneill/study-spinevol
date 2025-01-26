@@ -1,0 +1,9 @@
+[submodule "spm"]
+	path = spm
+	url = https://github.com/spm/spm
+[submodule "torso_tools"]
+	path = torso_tools
+	url = https://github.com/fil-opmeg/torso_tools
+[submodule "fem_tools/iso2mesh"]
+	path = fem_tools/iso2mesh
+	url = https://github.com/fangq/iso2mesh
