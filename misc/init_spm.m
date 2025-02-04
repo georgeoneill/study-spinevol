@@ -6,7 +6,7 @@ end
 
 if isempty(which('spm'))
     disp('Initialising SPM...')
-    restoredefaultpath;
+    % restoredefaultpath;
     addpath(path);
     spm('defaults','eeg');
     spm_jobman('initcfg');

@@ -6,7 +6,7 @@ figure;clf
 imagesc(re)
 axis equal
 axis off
-colorbar
+% colorbar
 colormap(brewermap(100,'RdPu'))
 clim([0 1]);
 
@@ -21,11 +21,11 @@ for ii = 1:numel(re)
         end
         text(y,x,sprintf('%.2f',re(ii)),...
             'horizontalalignment','center','color',col,...
-            'fontsize',12)
+            'fontsize',12,'FontName',proj_font)
     elseif re(ii) > 0
         text(y,x,sprintf('%1.e',re(ii)),...
             'horizontalalignment','center','color','w',...
-            'fontsize',12)
+            'fontsize',12,'FontName',proj_font)
     end
 
 
@@ -41,7 +41,7 @@ figure;clf
 imagesc(cc)
 axis equal
 axis off
-colorbar
+% colorbar
 colormap(brewermap(100,'Reds'))
 caxis([0 1])
 
@@ -56,7 +56,7 @@ for ii = 1:numel(cc)
         end
         text(y,x,sprintf('%.2f',cc(ii)),...
             'horizontalalignment','center','color',col,...
-            'fontsize',12)
+            'fontsize',12,'FontName',proj_font)
 
     end
 
@@ -77,19 +77,19 @@ plot(1:11,cc(1:11,end),'linewidth',2)
 ylabel('Metric')
 xticklabels(models)
 axis square
-set(gca,'fontsize',14)
+
 set(gcf,'color','w')
 grid on
 
 set(gcf,'Position',[ 473.8000  180.2000  652.0000  474.4000])
 xlim([1 11])
 xline(6.5,'--','','linewidth',2)
-legend('Relative Error','Correlation^2','Location','sw')
+legend('Relative Error','Correlation^2','Location','eo')
 
 cmap = [28 73 136;
     205 0 0]/255;
 
-set(gca,'colororder',cmap)
+set(gca,'colororder',cmap,'fontsize',14,'FontName',proj_font)
 fname = fullfile(files.results,...
     ['comp2fem_' tag '.png']);
 exportgraphics(gca,fname,'Resolution',600)

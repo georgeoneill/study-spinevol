@@ -52,7 +52,7 @@ set(gcf,'color','w')
 axis square
 
 cmap = turbo(11);
-set(gca,'colororder',cmap,'fontsize',14)
+set(gca,'colororder',cmap,'fontsize',14,'FontName',proj_font)
 legend(models,'location','eo')
 fname = fullfile(files.results,'field_eigenvalue_ratios.png');
 exportgraphics(gcf,fname,'Resolution',600);
@@ -115,7 +115,7 @@ ylim([0 90])
 grid on
 hold on
 cmap = turbo(11);
-set(gca,'colororder',cmap,'fontsize',14)
+set(gca,'colororder',cmap,'fontsize',14,'FontName',proj_font)
 switch result
      case 'si'
 plot(btwn_err,'m--','linewidth',3)
