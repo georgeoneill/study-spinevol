@@ -313,7 +313,7 @@ plot(5:5:100,re(:,end),'linewidth',2);
 hold on
 plot(5:5:100,cc(:,end),'linewidth',2);
 ylabel('Metric')
-xlabel('White Matter Mesh Density / %')
+xlabel('Spinal Cord Mesh Density / %')
 axis square
 set(gcf,'color','w')
 grid on
@@ -323,5 +323,20 @@ legend('Relative Error','Correlation^2','Location','eo')
 cmap = [28 73 136;
     205 0 0]/255;
 set(gca,'colororder',cmap,'fontsize',14,'FontName',proj_font)
-fname = fullfile(files.results,'convergence_5c_adjust_wm.png');
+fname = fullfile(files.results,'convergence_5c_adjust_sc.png');
+exportgraphics(gca,fname,'resolution',600);
+
+figure
+imagesc(rand(size(re)))
+axis equal
+axis off
+% colorbar
+colormap(brewermap(100,'RdPu'))
+clim([0 1]);
+set(gcf,'color','w')
+set(gcf,'position',[   481   411   879   527]);
+if iscell(cc)
+cc = cell2mat(cc);
+end
+fname = fullfile(files.results,'random_alignment_mat.png');
 exportgraphics(gca,fname,'resolution',600);
