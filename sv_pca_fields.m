@@ -189,7 +189,7 @@ spine_topoplot_wrapper(Lrot(251:500,1),grad_plot,mesh_torso,...
         [1 2 1],va,ca,1)
 
 spine_topoplot_wrapper(Lrot(251:500,2),grad_plot,mesh_torso,...
-        [1 2 2],va,ca,0)
+        [1 2 2],va,ca,1)
 
 % Just want to be able to adequately highlight the contours for publication
 if model_no == 7
@@ -198,10 +198,10 @@ if model_no == 7
 else
     ca2 = ca;
 end
-clines = linspace(-ca,ca,12);
-ft_plot_topo3d_v2(grad_plot.p,grad_plot.e,Lrot(251:500,2),...
-    'isolines',clines,'contourstyle','black',...
-    'neighbourdist',inf,'topostyle',false)
+% clines = linspace(-ca,ca,12);
+% ft_plot_topo3d_v2(grad_plot.p,grad_plot.e,Lrot(251:500,2),...
+%     'isolines',clines,'contourstyle','black',...
+%     'neighbourdist',inf,'topostyle',false)
 
 
 set(gcf,'color','w')

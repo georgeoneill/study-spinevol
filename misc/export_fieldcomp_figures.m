@@ -83,8 +83,9 @@ grid on
 
 set(gcf,'Position',[ 473.8000  180.2000  652.0000  474.4000])
 xlim([1 11])
+ylim([0 1])
 xline(6.5,'--','','linewidth',2)
-legend('Relative Error','Correlation^2','Location','eo')
+% legend('Relative Error','Correlation^2','Location','eo')
 
 cmap = [28 73 136;
     205 0 0]/255;
