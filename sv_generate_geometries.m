@@ -43,7 +43,7 @@ T                   = tt_register_thorax(S);
 
 % Work out the transform to make the mesh aigned along shoulders and update
 R1                  = tt_align_shoulders(T);
-mesh                = spm_mesh_transform(subject, R1);
+subject             = spm_mesh_transform(subject, R1);
 T                   = R1 * T;
 
 %% Generate sensor positions
@@ -63,7 +63,7 @@ grad_3ax            = tt_generate_sensor_array(S);
 S                   = [];
 S.subject           = subject;
 S.T                 = T;
-S.sensors           = grad_3ax;
+S.sensors           = grad_1ax;
 
 tt_check_registration(S);
 
@@ -106,3 +106,35 @@ Mb = spm_mesh_refine(Mb);
 %% Get the canonical meshes and transform into subject's space
 
 [bmeshes, names] = tt_load_meshes(T);
+
+%% Collate everything
+
+% import and convert to meters;
+
+mesh_wm.p = Mw.vertices / 1000;
+mesh_wm.e = Mw.faces;
+
+mesh_bone.p = Mb.vertices / 1000;
+mesh_bone.e = Mb.faces;
+
+mesh_blood.p = bmeshes{1}.vertices / 1000;
+mesh_blood.e = bmeshes{1}.faces;
+
+mesh_lungs.p = bmeshes{2}.vertices / 1000;
+mesh_lungs.e = bmeshes{2}.faces;
+
+mesh_torso.p = bmeshes{3}.vertices / 1000;
+mesh_torso.e = bmeshes{3}.faces;
+
+coils_1axis.p = grad_1ax.coilpos / 1000;
+coils_1axis.n = grad_1ax.coilori;
+
+coils_3axis.p = grad_3ax.coilpos / 1000;
+coils_3axis.n = grad_3ax.coilori;
+
+sources_cent.p = sources.pos / 1000;
+
+sources_disk.p = disc_src / 1000; 
+
+save(fullfile(files.root,'geometries','all_geometries.mat'),...
+    'mesh_*','coils_*','sources_*');
