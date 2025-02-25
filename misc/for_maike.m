@@ -2,6 +2,8 @@ clearvars
 close all
 clc
 
+proj_init
+
 load('C:\Users\George O''Neill\Downloads\geometries_19seg_bem.mat')
 
 bv = spm_mesh_bounding_volume(mesh_wm);
