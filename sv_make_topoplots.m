@@ -16,7 +16,8 @@ files.data = fullfile(files.results,'LFM_all_central_sources.mat');
 
 load(files.data);
 
-% load files.req
+models = {'Inf','SS','CS','1c LC','3c LC','4c LC','5c LC','5c LCi',...
+    '5c LG','5c LGi','FEM'};
 
 %% preprare mesh, sensors etc for plotters
 
@@ -46,7 +47,7 @@ grad_plot.e = tri;
 
 %% Plot one model for now
 
-for model_id = 1:numel(models);
+for model_id = 1:numel(models) % 1:numel(models) % for all plots!
 
     va = [-180 0];
 

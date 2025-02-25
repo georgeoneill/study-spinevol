@@ -1,12 +1,17 @@
-function tet = go_paperbnds2mesh_denserspine(bnd)
+function tet = go_paperbnds2mesh_denserspine(bnd,nshells)
 % A version of the FEM meshing code which incorporates the fact the WM mesh
-% has been turned into a set of concentric ssh
+% has been turned into a set of concentric shells
 %% Turn the boundaries into one tesselated mesh 
 %
 % 1) Define seed locations which are inside a given boundary 
 %
 % 2) Take the boundaries from a mesh and turn it into a tetrahedral mesh for
 % finite element analyses
+
+if nargin == 1
+    error(['please specify how many shells ',...
+        'the spinal cord has been subvided into!'])
+end
 
 % First merge all boundaries into one mesh...
 bemMerge = {};
@@ -31,7 +36,7 @@ end
 % generate seed locations (as these are convex hulls the mean vertex is 
 % likely to work) We split earlier as we wanted to treat each lung and
 % ventricle seperately
-for ii = 3:numel(klust)
+for ii = (nshells+2):numel(klust)
     tmp = klust(ii).vertices;
     cent(ii,:) = mean(tmp);
 end
@@ -40,13 +45,13 @@ end
 % narrow and wriggly we should be a little more careful finding points
 % which are inside. I think I've defined a plane roughly halfway up the
 % spine and we just slowly move outwards
-box_min = min(klust(1).vertices);
-box_max = max(klust(1).vertices);
-[~, dimmax] = max(abs(box_max-box_min));
-rng{1} = box_min(1):0.005:box_max(1);
-rng{2} = box_min(2):0.005:box_max(2);
-rng{3} = box_min(3):0.005:box_max(3);
-rng{dimmax} = 0.5*(box_max(dimmax) + box_min(dimmax));
+fprintf('determing point inside innermost mesh...')
+bv = spm_mesh_bounding_volume(klust(1));
+[~, dimmax] = max(abs(diff(bv)));
+rng{1} = bv(1,1):0.001:bv(2,1);
+rng{2} = bv(1,2):0.001:bv(2,2);
+rng{3} = bv(1,3):0.001:bv(2,3);
+rng{dimmax} = 0.5*(bv(1,dimmax) + bv(2,dimmax));
 [xx, yy, zz] = ndgrid(rng{1},rng{2},rng{3});
 candidates = [xx(:) yy(:) zz(:)];
 inside = zeros(length(candidates),1);
@@ -57,40 +62,50 @@ end
 cent(1,:) = mean(candidates(find(inside),:));
 assert(tt_is_inside(cent(1,:),klust(1).vertices,klust(1).faces),...
     'random seed source not inside spinal column!');
+fprintf(' COMPLETE\n')
 
-% shift it forward untill not inside 1 but inside 2
-tmp = cent(1,:);
-isin1 = true;
-isin2 = true;
-shift1 = 0;
-while isin1 && isin2
-    shift1= shift1 + [0.001 0 0];
-    isin1 = tt_is_inside(tmp + shift1,klust(1).vertices,klust(1).faces);
-    isin2 = tt_is_inside(tmp + shift1,klust(2).vertices,klust(2).faces);
+% shift it forward to work out when we have left one mesh at a time up to
+% the bone
+fprintf('determing seeds for other meshes...\n')
+shifts = (1:30)' * [0.0005 0 0];
+points = cent(1,:) + shifts;
+inside = zeros(nshells+1,length(points));
+for ii = 1:nshells+1
+    for jj = 1:length(points)
+        inside(ii,jj) = tt_is_inside(points(jj,:),...
+            klust(ii).vertices,klust(ii).faces);
+    end
 end
-shift2 = shift1;
-while isin2
-    shift2= shift2 + [0.001 0 0];
-    isin2 = tt_is_inside(tmp + shift2,klust(2).vertices,klust(2).faces);
+inshells = sum(inside);
+% get the seeds to give to the meshes
+for ii = 1:nshells+1
+    id = find(inshells == 2 + nshells - ii);
+    cent(ii,:) = mean(points(id,:));
 end
-shift_final = 0.5*(shift1 + shift2);
-cent(2,:) = cent(1,:)+shift_final;
+fprintf(' COMPLETE\n')
 
 % Now we hand over to iso2mesh to generate the tetrahedral mesh, I think we
 % have told it no tetrahedron to be no larger than 10 ml
 [node,elem] = surf2mesh(newnode, newelem, min(newnode), max(newnode),...
     1, 5*1e-7, cent,[],[],'tetgen1.5');
 
-% There are 7 compartments IDs, but we only have 5 tissue types, so this
+% There are n compartments IDs, but we only have 5 tissue types, so this
 % fixes it
-id = elem(:,5) + 10;
-id(id==11) = 1;
-id(id==12) = 2;
-id(id==13 | id == 14) = 3;
-id(id==15 | id == 16) = 4;
-id(id==17) = 5;
-
-elem(:,end) = id;
+% Turn first nshells ID into 1 
+id = find(elem(:,5) <= nshells);
+elem(id,5) = 1;
+% now do the bone which should be equal to nshells + 1;
+id = find(elem(:,5) == nshells+1);
+elem(id,5) = 2;
+% next compariment was split into two so looking for + 2 and +3
+id = find(elem(:,5) == nshells+2 | elem(:,5) == nshells+3);
+elem(id,5) = 3;
+% next compariment was split into two so looking for + 4 and +5
+id = find(elem(:,5) == nshells+4 | elem(:,5) == nshells+5);
+elem(id,5) = 4;
+% then the last one should be nshells + 6
+id = find(elem(:,5) == nshells+6);
+elem(id,5) = 5;
 
 % Some general housekeeping to ensure the mesh itegrity
 [no,el] = removeisolatednode(node,elem(:,1:4));

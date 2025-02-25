@@ -19,6 +19,10 @@ files.data = fullfile(files.results,'LFM_all_central_sources.mat');
 
 load(files.data);
 
+% Update the models names to match paper
+models = {'Inf','SS','CS','1c LC','3c LC','4c LC','5c LC','5c LCi',...
+    '5c LG','5c LGi','FEM'};
+
 %% Perform the intital comparison - make plots
 % Plot RE and CC matricies for all combined orientations
 

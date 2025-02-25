@@ -38,6 +38,8 @@ switch pm
 bad_node = find(node(:,axis) < val);
     case '<'
   bad_node = find(node(:,axis) > val);
+    case 'b'
+          bad_node = find(node(:,axis) < val(1) | node(:,axis) > val(2));
 end
 
 bad_el = find(sum(ismember(els,bad_node),2)>0);

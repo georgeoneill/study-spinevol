@@ -140,12 +140,14 @@ grid on
 
 set(gcf,'Position',[ 473.8000  180.2000  652.0000  474.4000])
 xlim(4*[5 95])
+ylim([1e-4 1])
 legend('Relative Error','Correlation^2','Location','eo')
 
 cmap = [28 73 136;
     205 0 0]/255;
 
 set(gca,'colororder',cmap,'fontsize',14,'FontName',proj_font)
+
 
 fname = fullfile(files.results,'convergence_1cBEM.png');
 exportgraphics(gcf,fname,'resolution',600)
@@ -233,7 +235,7 @@ end
 
 for ii = 1:numel(targets_wm)
     for jj = 1:numel(targets_bone)
-        if isempty(re{ii,jj}) && any([ii jj]==20)
+        if isempty(re{ii,jj}) && (any([ii jj]==20) || ii == jj)
 
         ds_wm = spm_mesh_reduce(ref_wm,targets_wm(ii));
         [ds_wm.vertices,ds_wm.faces] = meshcheckrepair(ds_wm.vertices,ds_wm.faces,'meshfix');
@@ -306,8 +308,8 @@ set(gcf,'position',[   481   411   879   527]);
 if iscell(cc)
 cc = cell2mat(cc);
 end
-fname = fullfile(files.results,'convergence_5c_re_mat.png');
-exportgraphics(gca,fname,'resolution',600);
+% fname = fullfile(files.results,'convergence_5c_re_mat.png');
+% exportgraphics(gca,fname,'resolution',600);
 
 %%
 
@@ -378,3 +380,29 @@ exportgraphics(gca,fname,'resolution',600);
 % end
 % fname = fullfile(files.results,'random_alignment_mat.png');
 % exportgraphics(gca,fname,'resolution',600);
+
+for ii = 1:20
+    re_diag(ii) = re{ii,ii};
+    cc_diag(ii) = cc{ii,ii};
+
+end
+
+% Plot metrics for full density bone mesh, adjusted wm mesh
+figure
+semilogy(20:20:400,re_diag,'linewidth',2);
+hold on
+semilogy(20:20:400,cc_diag,'linewidth',2);
+ylabel('Metric')
+xlabel('Spinal Cord & Bone Mesh Density / %')
+axis square
+set(gcf,'color','w')
+grid on
+set(gcf,'Position',[ 473.8000  180.2000  652.0000  474.4000])
+xlim([20 380])
+ylim([1e-4 1])
+legend('Relative Error','Correlation^2','Location','eo')
+cmap = [28 73 136;
+    205 0 0]/255;
+set(gca,'colororder',cmap,'fontsize',14,'FontName',proj_font)
+fname = fullfile(files.results,'convergence_5c_adjust_both.png');
+exportgraphics(gca,fname,'resolution',600);

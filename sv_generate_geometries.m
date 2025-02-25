@@ -83,6 +83,11 @@ sources.inside(end,:) = [];
 
 scatter3(sources.pos(:,1),sources.pos(:,2),sources.pos(:,3),'y.');
 
+%% Make the additional disk of sources 
+
+% ring of 8 sources 4 mm away from each existing source 
+disc_src = tt_make_disk_sources(sources.pos, 4, 8);
+
 %% Build the Spinal Cord and Bone Meshes based on sources
 
 radius = 8; %% radius of enclosing cylinder in mm

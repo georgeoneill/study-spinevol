@@ -18,6 +18,9 @@ end
 files.data = fullfile(files.results,'LFM_all_disk_sources.mat');
 load(files.data);
 
+% Update the models names to match paper
+models = {'Inf','SS','CS','1c LC','3c LC','4c LC','5c LC','5c LCi',...
+    '5c LG','5c LGi','FEM'};
 
 %% Determine current flow along the orientation of the spine
 
@@ -171,5 +174,5 @@ end
 
 %% Auxillary function
 function e = relative_error(La,Lb)
-e = norm(Lb-La)./(norm(La+Lb));
+e = norm(Lb-La)./(norm(La)+norm(Lb));
 end

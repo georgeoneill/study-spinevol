@@ -350,33 +350,16 @@ exec_time{end+1} = NaN;
 
 
 %% Generate FEM Results
+% To save time, we shall use the mesh and transfer matrix generated in
+% sv_make_lead_fields_central
 
 ti = tic;
 
-clear bnd
-id = [1 2 3 4 5];
-for ii = 1:numel(id)
-
-    tmp = [];
-    tmp.tri         = bnds(id(ii)).tri;
-    tmp.pos         = bnds(id(ii)).pos;
-    tmp.unit        = bnds(id(ii)).unit;
-    tmp             = ft_convert_units(tmp,'m');
-
-    bnd(ii) = tmp;
-
-end
-
-vol_fem = go_paperbnds2mesh(bnd);
-
 files.femdir = fullfile(files.root,'fem_tempdir');
-% create fem proc director or purge contents (to stop it using the a
-% pre-exisitng transfer matrix
-if ~exist(files.femdir)
-    mkdir(files.femdir);
-else
-    delete(fullfile(files.femdir,'*'));
+if ~exist(fullfile(files.femdir,'volume_conductor.msh'),'file')
+    error('please run sv_make_lead_fields_central first!')
 end
+vol_fem = fem_read_gmsh(fullfile(files.femdir,'volume_conductor.msh'));
 
 cratio = 40;
 
@@ -386,13 +369,7 @@ S.mesh = vol_fem;
 S.grad = grad;
 S.src = src;
 S.cond = [0.33 0.33/cratio .62 .05 .23];
-% For FIL-based workstations you need to put the executable in the wtcnapps
-% folder, then point to the directory where it is stored. Uncomment the
-% code below and set the the appropriate path!
-%S.bindir = 'C:\wtcnapps\duneuro';
 
-% If this works, get a cup of tea, call your mum, read a paper whilst this
-% computes.
 fwd_tmp = fem_calc_fwds(S);
 
 L{end+1} = fwd_tmp;

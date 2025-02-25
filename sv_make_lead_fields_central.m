@@ -367,7 +367,10 @@ for ii = 1:numel(id)
 
 end
 
-vol_fem = go_paperbnds2mesh(bnd);
+% to allow for more reliable meshing in the spinal cord, we generate a new
+% mesh 4 mm inwards and add that to the meshing.
+bnd(1) = go_add_concentric_mesh(bnd(1),0.004);
+vol_fem = go_paperbnds2mesh_denserspine(bnd,2);
 
 files.femdir = fullfile(files.root,'fem_tempdir');
 % create fem proc director or purge contents (to stop it using the a
