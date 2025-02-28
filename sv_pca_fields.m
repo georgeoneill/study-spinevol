@@ -94,7 +94,7 @@ switch result
     case 'lr'
         plot(lr_err','linewidth',2)
         % title('Angle between V1 and LR')
-                ylabel('Angle between V1 and RL axis / degrees')
+        ylabel('Angle between V1 and RL axis / degrees')
 
     case 'si'
         plot(is_err','linewidth',2)
@@ -117,8 +117,8 @@ hold on
 cmap = turbo(11);
 set(gca,'colororder',cmap,'fontsize',14,'FontName',proj_font)
 switch result
-     case 'si'
-plot(btwn_err,'m--','linewidth',3)
+    case 'si'
+        plot(btwn_err,'m--','linewidth',3)
 end
 axis square
 legend(models,'location','eo')
@@ -157,56 +157,56 @@ source_no = 30;
 
 for model_no = [4 7]
 
-for ii = 1:model_no
-    for jj = 1:source_no
+    for ii = 1:model_no
+        for jj = source_no
 
-        sid = 3*(jj - 1) + (1:3);
-        l = L{ii}(:,sid);
+            sid = 3*(jj - 1) + (1:3);
+            l = L{ii}(:,sid);
 
-        [U,S,V] = svd(l,'econ');
+            [U,S,V] = svd(l,'econ');
 
-        % ratios(ii,jj) = S(1) / S(5);
-        % V1(ii,jj,:) = V(:,1);
+            % ratios(ii,jj) = S(1) / S(5);
+            % V1(ii,jj,:) = V(:,1);
 
+        end
     end
-end
 
 
-Lrot = U * S * eye(3);
-ca = max(max(abs(Lrot(251:500,:))));
+    Lrot = U * S * eye(3);
+    ca = max(max(abs(Lrot(251:500,:))));
 
 
-figure
-axis off
-hold on
+    figure
+    axis off
+    hold on
 
-ps = 3;
-va = [180 0];
+    ps = 3;
+    va = [180 0];
 
-% cmap = flip(brewermap(35,'RdBu'));
+    % cmap = flip(brewermap(35,'RdBu'));
 
-spine_topoplot_wrapper(Lrot(251:500,1),grad_plot,mesh_torso,...
+    spine_topoplot_wrapper(Lrot(251:500,1),grad_plot,mesh_torso,...
         [1 2 1],va,ca,1)
 
-spine_topoplot_wrapper(Lrot(251:500,2),grad_plot,mesh_torso,...
+    spine_topoplot_wrapper(Lrot(251:500,2),grad_plot,mesh_torso,...
         [1 2 2],va,ca,1)
 
-% Just want to be able to adequately highlight the contours for publication
-if model_no == 7
-    ca2 = ca;
-    ca = max(abs(Lrot(251:500,2)));
-else
-    ca2 = ca;
-end
-% clines = linspace(-ca,ca,12);
-% ft_plot_topo3d_v2(grad_plot.p,grad_plot.e,Lrot(251:500,2),...
-%     'isolines',clines,'contourstyle','black',...
-%     'neighbourdist',inf,'topostyle',false)
+    % Just want to be able to adequately highlight the contours for publication
+    if model_no == 7
+        ca2 = ca;
+        ca = max(abs(Lrot(251:500,2)));
+    else
+        ca2 = ca;
+    end
+    % clines = linspace(-ca,ca,12);
+    % ft_plot_topo3d_v2(grad_plot.p,grad_plot.e,Lrot(251:500,2),...
+    %     'isolines',clines,'contourstyle','black',...
+    %     'neighbourdist',inf,'topostyle',false)
 
 
-set(gcf,'color','w')
+    set(gcf,'color','w')
 
-fname = fullfile(files.results,sprintf('eigenfields_%s_%.2e_ft.png',models{model_no},ca2*1e6));
-exportgraphics(gcf,fname,'Resolution',600)
+    fname = fullfile(files.results,sprintf('eigenfields_%s_%.2e_ft.png',models{model_no},ca2*1e6));
+    exportgraphics(gcf,fname,'Resolution',600)
 
 end

@@ -116,7 +116,7 @@ plot(cratio,re(end,:),'linewidth',2);
 hold on
 plot(cratio,cc(end,:),'linewidth',2);
 ylabel('Metric')
-xlabel('Condtivity Ratio')
+xlabel('Conductivity Ratio')
 axis square
 set(gcf,'color','w')
 grid on
@@ -164,7 +164,7 @@ set(gcf,'color','w')
 axis square
 
 for ii = 1:numel(cratio)
-    ccell{ii} = num2str(cratio(ii))
+    ccell{ii} = num2str(cratio(ii));
 end
 
 cmap = viridis(12);
@@ -173,3 +173,15 @@ legend(ccell,'location','eo')
 set(gcf,'Position',[ 473.8000  180.2000  652.0000  474.4000])
 fname = fullfile(files.results,'cond_adj_eigenfields.png');
 exportgraphics(gca,fname,'resolution',600);
+
+%% Plot something here
+
+figure
+scatter(cratio,ratios(:,30),'o','filled');
+xlabel('Condtivity Ratio')
+ylabel('Ratio of S1 to S2')
+axis square
+grid on
+set(gcf,'Position',[ 473.8000  180.2000  652.0000  474.4000],'color','w')
+set(gca,'colororder',cmap,'fontsize',14,'FontName',proj_font)
+
