@@ -1,4 +1,4 @@
-function tet = go_paperbnds2mesh_denserspine(bnd)
+function tet = go_bnds2mesh_maike(bnd,centroids,tissue);
 % A version of the FEM meshing code which incorporates the fact the WM mesh
 % has been turned into a set of concentric ssh
 %% Turn the boundaries into one tesselated mesh 

@@ -55,7 +55,7 @@ F=[good_el(:,[2 1 3]);... %face 1 2 3
     good_el(:,[3 1 4])];   %face 1 3 4
 C=repmat(good_types,4,1);
 % [faces, c] = element2patch(good_el,good_types);
-cmap = hsv(numel(unique(good_types)));
+cmap = jet(20);
 % cmap = flipud(brewermap(3,'BuPu'));
 
 figure

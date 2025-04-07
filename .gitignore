@@ -1,3 +1,5 @@
 results/
+unshared_funcs/
 fem_tempdir/
 *.asv
+*maike*
