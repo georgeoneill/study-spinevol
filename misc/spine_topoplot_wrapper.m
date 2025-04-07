@@ -1,5 +1,9 @@
 function spine_topoplot_wrapper(map,sens,torso,ax,va,plotscale,plotcline)
 
+if isempty(which('CreateAxes'))
+    error('You do not have the plotting tools due to them not being licensed for sharing.')
+end
+
 cmap = flip(brewermap(25,'RdBu'));
 
 CreateAxes(ax(1),ax(2),ax(3)); hold on;
